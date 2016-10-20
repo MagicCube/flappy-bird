@@ -74,7 +74,7 @@ void background() {
     if (hills[last] < hillTop)
     {
         hillSlope = 0;
-        hillTop = random(15, 40);
+        hillTop = random(10, 40);
     }
     if (hills[last] > 45)
     {
@@ -95,7 +95,7 @@ void background() {
         display.drawFastVLine(i + 1, hills[i], 3, WHITE);
         if (i % 2 == 0)
         {
-            display.drawLine(i+1, hills[i], (i+1) * 2, hills[i] + ((i+1) * 2), BLACK);
+            display.drawFastVLine(i + 1, hills[i], 6, WHITE);
         }
     }
 }
