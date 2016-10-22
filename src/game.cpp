@@ -313,7 +313,7 @@ void died() {
     bullet1 = random(1, 4);
     bullet2 = random(35, 39);
     boost = 0;
-    height = 0;
+    height = 10;
     fallSpeed = 0;
     clock = millis();
     fallTimer = clock;
