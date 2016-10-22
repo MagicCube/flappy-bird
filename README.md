@@ -1,2 +1,4 @@
 # flappy-bird
-Arduino Flappybird，晚上讲座，还有6小时，来不及了，先写这个
+An SSD1306 + Arduino version of Flappy Bird
+
+Details will be provided in the future.
