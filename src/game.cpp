@@ -42,7 +42,6 @@ int gap2 = 14;
 uint8_t hills[DISPLAY_WIDTH];
 uint8_t hillSlope = 1;
 uint8_t hillTop = 26;
-uint8_t shade = 0;
 
 uint8_t song = 0;
 
@@ -226,27 +225,26 @@ void scores() {
 }
 
 void collision() {
-    if (height + 1 < gap1 && sewer1 <= 26 && sewer1 >= 14) {
+    if (height + 3 < gap1 && sewer1 <= 24 && sewer1 >= 12) {
         died();
     }
-    if (height + 8 > gap1 + 20 && sewer1 <= 26 && sewer1 >= 14) {
+    else if (height + 10 > gap1 + 20 && sewer1 <= 24 && sewer1 >= 12) {
         died();
     }
-    if (height + 1 < gap2 && sewer2 <= 26 && sewer2 >= 14) {
+    else if (height + 3 < gap2 && sewer2 <= 24 && sewer2 >= 12) {
         died();
     }
-    if (height + 8 > gap2 + 20 && sewer2 <= 26 && sewer2 >= 14) {
+    else if (height + 10 > gap2 + 20 && sewer2 <= 24 && sewer2 >= 12) {
         died();
     }
-
-    if (height < bullet1 + 6 && bulletTravel1 <= 26 && bulletTravel1 >= 14) {
+    else if (height < bullet1 + 6 && bulletTravel1 <= 24 && bulletTravel1 >= 12) {
         died();
     }
-    if (height > bullet2 && bulletTravel2 <= 26 && bulletTravel2 >= 14) {
+    else if (height > bullet2 && bulletTravel2 <= 24 && bulletTravel2 >= 12) {
         died();
     }
-
-    if (height + 8 > 39) {
+    else if (height + 8 > 42) {
+        // Fall down
         died();
     }
 }
@@ -306,6 +304,7 @@ void died() {
     }
     score = 0;
     buttonActive = true;
+    buttonState = 0;
     sewer1 = 84;
     sewer2 = 126;
     sewerSpeed = 2;
@@ -314,7 +313,7 @@ void died() {
     bullet1 = random(1, 4);
     bullet2 = random(35, 39);
     boost = 0;
-    height = 10;
+    height = 0;
     fallSpeed = 0;
     clock = millis();
     fallTimer = clock;
@@ -323,7 +322,7 @@ void died() {
 void gamePlay() {
     Serial.println("gameplay");
     int flapHeight[] = {height, height, height - 5, height - 7, height - 9, height - 7, height - 6};
-    buttonState = digitalRead(BUTTON_PIN);
+    buttonState = analogRead(A1) < 460 ? LOW : HIGH;
 
     if (buttonState == LOW && buttonActive == true) {
         for (int i = 900; i < 1400; i++) {
@@ -338,15 +337,12 @@ void gamePlay() {
             display.drawBitmap(18, flapHeight[x] - boost, bird[flap[x]], 8, 8, 1);
             scores();
             display.display();
-            buttonState = digitalRead(BUTTON_PIN);
-            delay(50);
-            buttonState = digitalRead(BUTTON_PIN);
-            delay(50);
-            buttonState = digitalRead(BUTTON_PIN);
+            delay(100);
+            buttonState = analogRead(A1) < 460 ? LOW : HIGH;
             height = flapHeight[x] - boost;
             collision();
             if (x > 2) {
-                if (buttonState == LOW && buttonActive == true) {
+                if (buttonState == LOW && buttonActive) {
                     x = 0;
                     boost = boost + 7;
                     for (int i = 900; i < 1400; i++) {
@@ -360,7 +356,6 @@ void gamePlay() {
         fallTimer = clock;
         boost = 0;
     }
-
     else {
         fallSpeed = ((clock - fallTimer) / 400) + 1;
         if (fallSpeed > 3) {
