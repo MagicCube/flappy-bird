@@ -17,7 +17,6 @@ Adafruit_SSD1306 display = Adafruit_SSD1306(4);
 #define DISPLAY_HEIGHT 64
 
 unsigned long clock = 0;
-unsigned long timerDelay = 0;
 unsigned long fallTimer = 0;
 
 uint8_t score = 0;
@@ -303,7 +302,6 @@ void died() {
         delay(40);
     }
     score = 0;
-    buttonActive = true;
     buttonState = 0;
     sewer1 = 84;
     sewer2 = 126;
@@ -317,14 +315,14 @@ void died() {
     fallSpeed = 0;
     clock = millis();
     fallTimer = clock;
+    buttonActive = true;
 }
 
 void gamePlay() {
-    Serial.println("gameplay");
-    int flapHeight[] = {height, height, height - 5, height - 7, height - 9, height - 7, height - 6};
     buttonState = analogRead(A1) < 460 ? LOW : HIGH;
 
-    if (buttonState == LOW && buttonActive == true) {
+    if (buttonState == LOW && buttonActive) {
+        int flapHeight[] = {height, height, height - 5, height - 7, height - 9, height - 7, height - 6};
         for (int i = 900; i < 1400; i++) {
             tone(BUZZER_PIN, i, 20);
         }
@@ -410,7 +408,6 @@ void gamePlay() {
 // ----------------------------------------- SETUP -----------------------------------------
 
 void setup() {
-    delay(1000);
     pinMode(5, OUTPUT);
 
     display.begin();
@@ -436,8 +433,6 @@ void setup() {
     {
         sing(1);
     }
-
-    Serial.println("511");
 
     beep();
 }
